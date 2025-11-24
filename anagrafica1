@@ -2,95 +2,123 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Dati Utente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrafica Utente</title>
     <style>
         body {
-            font-family: Arial;
-            background: #eee;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
             padding: 20px;
         }
-        .box {
-            background: white;
-            padding: 15px;
-            max-width: 500px;
-            margin: auto;
-            border-radius: 5px;
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        input, button {
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="number"] {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
-            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
-            background: green;
+            background-color: #4CAF50;
             color: white;
+            padding: 10px 15px;
             border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Inserisci i tuoi dati</h2>
+    <div class="container">
+        <h1>Inserisci i Dati Anagrafici</h1>
+        <form id="userForm">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="cognome">Cognome</label>
+                <input type="text" id="cognome" required>
+            </div>
+            <div class="form-group">
+                <label for="indirizzo">Indirizzo</label>
+                <input type="text" id="indirizzo" required>
+            </div>
+            <div class="form-group">
+                <label for="citta">Città</label>
+                <input type="text" id="citta" required>
+            </div>
+            <div class="form-group">
+                <label for="cap">CAP</label>
+                <input type="text" id="cap" required>
+            </div>
+            <div class="form-group">
+                <label for="dataNascita">Data di Nascita</label>
+                <input type="date" id="dataNascita" required>
+            </div>
+            <button type="submit">Calcola Generazione</button>
+        </form>
 
-    <form name="formUtente">
-        <label>Nome:</label>
-        <input type="text" name="nome" required>
+        <div class="result" id="generazioneResult"></div>
+    </div>
 
-        <label>Cognome:</label>
-        <input type="text" name="cognome" required>
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-        <label>Indirizzo:</label>
-        <input type="text" name="indirizzo" required>
+    let nome = document.getElementById('nome').value;
+    let cognome = document.getElementById('cognome').value;
+    let dataNascita = document.getElementById('dataNascita').value;
 
-        <label>Città:</label>
-        <input type="text" name="citta" required>
-
-        <label>CAP:</label>
-        <input type="text" name="cap" required>
-
-        <label>Età:</label>
-        <input type="number" name="eta" required min="0" max="120">
-
-        <button type="button" onclick="calcola()">Scopri Generazione</button>
-    </form>
-</div>
-
-<script>
-function calcola() {
-    let nome = document.formUtente.nome.value;
-    let cognome = document.formUtente.cognome.value;
-    let indirizzo = document.formUtente.indirizzo.value;
-    let citta = document.formUtente.citta.value;
-    let cap = document.formUtente.cap.value;
-    let eta = document.formUtente.eta.value;
-
-    if (eta == "" || eta < 0) {
-        alert("Inserisci un'età valida!");
+    if (!dataNascita) {
+        alert("Inserisci una data di nascita.");
         return;
     }
 
-    // Anno di nascita calcolato in modo semplice
-    let anno = 2025 - eta;
+    let anno = dataNascita.substring(0,4); // prendo i primi 4 caratteri, cioè l'anno
 
-    let gen = "";
+    let generazione = "";
 
-    if (anno >= 2013) gen = "Generazione Alpha (2013 - oggi)";
-    else if (anno >= 1997) gen = "Generazione Z (1997 - 2012)";
-    else if (anno >= 1981) gen = "Millennials (1981 - 1996)";
-    else if (anno >= 1965) gen = "Generazione X (1965 - 1980)";
-    else if (anno >= 1946) gen = "Baby Boomers (1946 - 1964)";
-    else if (anno >= 1928) gen = "Generazione Silenziosa (1928 - 1945)";
-    else gen = "Greatest Generation (1901 - 1927)";
+    if (anno >= 2013) generazione = "Generazione Alpha (2013 - presente)";
+    else if (anno >= 1997) generazione = "Generazione Z (1997 - 2012)";
+    else if (anno >= 1981) generazione = "Millennials (1981 - 1996)";
+    else if (anno >= 1965) generazione = "Generazione X (1965 - 1980)";
+    else if (anno >= 1946) generazione = "Baby Boomers (1946 - 1964)";
+    else if (anno >= 1928) generazione = "Generazione Silenziosa (1928 - 1945)";
+    else generazione = "Greatest Generation (1901 - 1927)";
 
-    alert(
-        "Ciao " + nome + " " + cognome + "!\n" +
-        "Abiti in " + indirizzo + ", " + citta + " (" + cap + ").\n" +
-        "Hai " + eta + " anni e appartieni a: " + gen + "."
-    );
-}
-</script>
+    document.getElementById('generazioneResult').textContent = "Ciao " + nome + " " + cognome + ", la tua generazione è: " + generazione + ". La tua data di nascita è: " + dataNascita + ".";
+});
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Dati Utente</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eee;
+            padding: 20px;
+        }
+        .box {
+            background: white;
+            padding: 15px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: green;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Inserisci i tuoi dati</h2>
+
+    <form name="formUtente">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+
+        <label>Cognome:</label>
+        <input type="text" name="cognome" required>
+
+        <label>Indirizzo:</label>
+        <input type="text" name="indirizzo" required>
+
+        <label>Città:</label>
+        <input type="text" name="citta" required>
+
+        <label>CAP:</label>
+        <input type="text" name="cap" required>
+
+        <label>Età:</label>
+        <input type="number" name="eta" required min="0" max="120">
+
+        <button type="button" onclick="calcola()">Scopri Generazione</button>
+    </form>
+</div>
+
+<script>
+function calcola() {
+    let nome = document.formUtente.nome.value;
+    let cognome = document.formUtente.cognome.value;
+    let indirizzo = document.formUtente.indirizzo.value;
+    let citta = document.formUtente.citta.value;
+    let cap = document.formUtente.cap.value;
+    let eta = document.formUtente.eta.value;
+
+    if (eta == "" || eta < 0) {
+        alert("Inserisci un'età valida!");
+        return;
+    }
+
+    // Anno di nascita calcolato in modo semplice
+    let anno = 2025 - eta;
+
+    let gen = "";
+
+    if (anno >= 2013) gen = "Generazione Alpha (2013 - oggi)";
+    else if (anno >= 1997) gen = "Generazione Z (1997 - 2012)";
+    else if (anno >= 1981) gen = "Millennials (1981 - 1996)";
+    else if (anno >= 1965) gen = "Generazione X (1965 - 1980)";
+    else if (anno >= 1946) gen = "Baby Boomers (1946 - 1964)";
+    else if (anno >= 1928) gen = "Generazione Silenziosa (1928 - 1945)";
+    else gen = "Greatest Generation (1901 - 1927)";
+
+    alert(
+        "Ciao " + nome + " " + cognome + "!\n" +
+        "Abiti in " + indirizzo + ", " + citta + " (" + cap + ").\n" +
+        "Hai " + eta + " anni e appartieni a: " + gen + "."
+    );
+}
+</script>
+
+</body>
+</html>

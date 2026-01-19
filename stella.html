@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title> Canvas stella</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="500"> </canvas>
+    <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(250, 250, 200, 0, 2*Math.PI);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(250, 250 - 200);
+    ctx.lineTo(250 + 200 * 0.59, 250 + 200 * 0.81);
+    ctx.lineTo(250 - 200 * 0.95, 250 - 200 * 0.31);
+    ctx.lineTo(250 + 200 * 0.95, 250 - 200 * 0.31);
+    ctx.lineTo(250 - 200 * 0.59, 250 + 200 * 0.81);
+    ctx.closePath();
+    ctx.stroke();
+</script>
+</body>
+</html>

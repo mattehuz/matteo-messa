@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Controllo registrazione</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .errore {
+            color: red;
+        }
+        .ok {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Registrati</h2>
+
+<form id="registrazione">
+    <label>Email</label><br>
+    <input type="email" id="userEmail"><br><br>
+
+    <label>Password</label><br>
+    <input type="password" id="userPassword"><br><br>
+
+    <button type="submit">Invia dati</button>
+</form>
+
+<div id="feedback"></div>
+
+<script>
+const form = document.getElementById("registrazione");
+const messaggio = document.getElementById("feedback");
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const pwd = document.getElementById("userPassword").value;
+    messaggio.className = "errore";
+    messaggio.textContent = "";
+
+    if (pwd === "") {
+        messaggio.textContent = "La password è obbligatoria";
+        return;
+    }
+
+    if (pwd.length < 8) {
+        messaggio.textContent = "La password deve avere almeno 8 caratteri";
+        return;
+    }
+
+    const iniziale = pwd[0];
+    if (iniziale < "A" || iniziale > "Z") {
+        messaggio.textContent = "La password deve iniziare con una lettera maiuscola";
+        return;
+    }
+
+    const caratteriSpeciali = ["@", "#", "?", "$", "-", "_"];
+    let trovato = false;
+
+    for (let i = 0; i < caratteriSpeciali.length; i++) {
+        if (pwd.includes(caratteriSpeciali[i])) {
+            trovato = true;
+            break;
+        }
+    }
+
+    if (!trovato) {
+        messaggio.textContent = "Inserisci almeno un carattere speciale";
+        return;
+    }
+
+    messaggio.className = "ok";
+    messaggio.textContent = "Registrazione completata con successo";
+});
+</script>
+
+</body>
+</html>

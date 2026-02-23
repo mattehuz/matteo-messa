@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Stampa dati</title>
+</head>
+<body>
+
+<h2>Dati inseriti</h2>
+
+<table border="1">
+<tr>
+    <th>Indice</th>
+    <th>Nome</th>
+    <th>Cognome</th>
+    <th>Età</th>
+</tr>
+<tbody id="out"></tbody>
+</table>
+
+<br>
+<button onclick="azzera()">Azzera dati</button>
+
+<script>
+let persone = JSON.parse(localStorage.getItem("persone")) || [];
+
+let out = document.getElementById("out");
+
+for (let i = 0; i < persone.length; i++) {
+    out.innerHTML +=
+        "<tr>" +
+        "<td>" + (i + 1) + "</td>" +
+        "<td>" + persone[i].nome + "</td>" +
+        "<td>" + persone[i].cognome + "</td>" +
+        "<td>" + persone[i].eta + "</td>" +
+        "</tr>";
+}
+
+function azzera() {
+    localStorage.removeItem("persone");
+    alert("Dati cancellati");
+    location.reload();
+}
+</script>
+
+</body>
+</html>

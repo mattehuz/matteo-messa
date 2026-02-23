@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Dati Utente</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #eee;
+        padding: 20px;
+    }
+    .box {
+        background: white;
+        padding: 15px;
+        max-width: 500px;
+        margin: auto;
+        border-radius: 5px;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+    button {
+        background: green;
+        color: white;
+        border: none;
+    }
+    .inline {
+        width: auto;
+        margin-right: 10px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Inserisci i tuoi dati</h2>
+
+    <label>Nome:</label>
+    <input type="text" id="nome">
+
+    <label>Cognome:</label>
+    <input type="text" id="cognome">
+
+    <label>Indirizzo:</label>
+    <input type="text" id="indirizzo">
+
+    <label>Città:</label>
+    <input type="text" id="citta">
+
+    <label>Provincia:</label>
+    <select id="provincia">
+        <option value="">-- Seleziona --</option>
+        <option value="RM">Roma</option>
+        <option value="MI">Milano</option>
+        <option value="NA">Napoli</option>
+        <option value="TO">Torino</option>
+        <option value="FI">Firenze</option>
+    </select>
+
+    <label>CAP:</label>
+    <input type="text" id="cap">
+
+    <label>Username:</label>
+    <input type="text" id="username">
+
+    <label>Password:</label>
+    <input type="password" id="password">
+
+    <label>Email:</label>
+    <input type="text" id="email">
+
+    <label>Età:</label>
+    <input type="number" id="eta" min="0" max="120">
+
+    <label>Sesso:</label><br>
+    <input type="radio" name="sesso" value="Maschio" class="inline"> M
+    <input type="radio" name="sesso" value="Femmina" class="inline"> F
+    <input type="radio" name="sesso" value="Altro" class="inline"> Altro
+    <br><br>
+
+    <label>Mezzi di locomozione:</label><br>
+    <input type="checkbox" name="mezzi" value="Auto" class="inline"> Auto
+    <input type="checkbox" name="mezzi" value="Moto" class="inline"> Moto
+    <input type="checkbox" name="mezzi" value="Bici" class="inline"> Bici
+    <br><br>
+
+    <label>Materie preferite (max 3):</label>
+    <select id="materie" multiple size="5">
+        <option>Matematica</option>
+        <option>Italiano</option>
+        <option>Inglese</option>
+        <option>Storia</option>
+        <option>Geografia</option>
+        <option>Scienze</option>
+    </select>
+
+    <button onclick="valida()">Controlla Dati</button>
+    <button onclick="inviaMultiplo()">Invio multiplo</button>
+    <button onclick="vaiAllaStampa()">Stampa dati</button>
+</div>
+
+<script>
+
+    function inviaMultiplo() {
+    
+        let nome = document.getElementById("nome").value.trim();
+        let cognome = document.getElementById("cognome").value.trim();
+        let cap = document.getElementById("cap").value.trim();
+        let username = document.getElementById("username").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let eta = document.getElementById("eta").value;
+    
+        // REGEX
+        let nomeCognomeRegex = /^[A-Za-z]+$/;
+        let capRegex = /^[0-9]+$/;
+        let usernameRegex = /^[A-Za-z0-9!@#$%^&*._-]{3,16}$/;
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*._-]).{4,}$/;
+    
+        // CONTROLLI CON IF
+    
+        if (nome === "" || !nomeCognomeRegex.test(nome)) {
+            alert("Nome non valido: solo lettere.");
+            return;
+        }
+    
+        if (cognome === "" || !nomeCognomeRegex.test(cognome)) {
+            alert("Cognome non valido: solo lettere.");
+            return;
+        }
+    
+        if (!capRegex.test(cap)) {
+            alert("CAP non valido: solo numeri.");
+            return;
+        }
+    
+        if (!usernameRegex.test(username)) {
+            alert("Username non valido: 3-16 caratteri ammessi.");
+            return;
+        }
+    
+        if (!passwordRegex.test(password)) {
+            alert("Password non valida:\n- minimo 4 caratteri\n- almeno una maiuscola\n- almeno un numero\n- almeno un carattere speciale");
+            return;
+        }
+    
+        if (!emailRegex.test(email)) {
+            alert("Email non valida.");
+            return;
+        }
+    
+        // Se tutti i controlli sono superati
+    
+        let persone = JSON.parse(localStorage.getItem("persone")) || [];
+    
+        if (persone.length >= 4) {
+            alert("Massimo 4 persone");
+            return;
+        }
+    
+        let persona = {
+            nome: nome,
+            cognome: cognome,
+            eta: eta
+        };
+    
+        persone.push(persona);
+        localStorage.setItem("persone", JSON.stringify(persone));
+    
+        alert("Persona inserita (" + persone.length + ")");
+    }
+    
+    function vaiAllaStampa() {
+        window.location.href = "stampaNuova.html";
+    }
+    
+    </script>
+
+</body>
+</html>

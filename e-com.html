@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Shop Semplice</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+<h1>Negozio Online</h1>
+
+<!-- CARICA CSV -->
+<input type="file" id="fileInput">
+
+<h2>Prodotti</h2>
+<div id="prodotti"></div>
+
+<h2>Registrazione</h2>
+<input type="text" id="nome" placeholder="Nome">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="registrati()">Registrati</button>
+<button onclick="logout()">Logout</button>
+
+<h2>Carrello</h2>
+<ul id="carrello"></ul>
+<button onclick="completaAcquisto()">Carrello (Acquista)</button>
+<button onclick="generaPDF()">Scarica PDF</button>
+
+<script>
+let prodotti = [];
+let carrello = [];
+let utenteRegistrato = null;
+
+// LETTURA CSV
+document.getElementById("fileInput").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const testo = event.target.result;
+        const righe = testo.split("\n");
+
+        prodotti = [];
+
+        for (let i = 1; i < righe.length; i++) {
+            let colonne = righe[i].split(",");
+            if (colonne.length < 4) continue;
+
+            let prodotto = {
+                tipo: colonne[0],
+                nome: colonne[1],
+                descrizione: colonne[2],
+                prezzo: colonne[3]
+            };
+
+            prodotti.push(prodotto);
+        }
+
+        mostraProdotti();
+    };
+
+    reader.readAsText(file);
+});
+
+// MOSTRA PRODOTTI
+function mostraProdotti() {
+    const container = document.getElementById("prodotti");
+    container.innerHTML = "";
+
+    prodotti.forEach((p, index) => {
+        container.innerHTML += `
+            <div style="border:1px solid black; margin:10px; padding:10px;">
+                <h3>${p.nome}</h3>
+                <p>Tipo: ${p.tipo}</p>
+                <p>${p.descrizione}</p>
+                <p>Prezzo: €${p.prezzo}</p>
+                <button onclick="aggiungiCarrello(${index})">Aggiungi al carrello</button>
+            </div>
+        `;
+    });
+}
+
+// REGISTRAZIONE
+function registrati() {
+    let nome = document.getElementById("nome").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    if (nome === "" || email === "" || password === "") {
+        alert("Compila tutti i campi!");
+        return;
+    }
+
+    utenteRegistrato = {
+        nome: nome,
+        email: email,
+        password: password
+    };
+
+    alert("Registrazione completata!");
+}
+
+// LOGOUT
+function logout() {
+    utenteRegistrato = null;
+    carrello = [];
+    aggiornaCarrello();
+    alert("Logout effettuato!");
+}
+
+// AGGIUNGI AL CARRELLO
+function aggiungiCarrello(index) {
+    if (!utenteRegistrato) {
+        alert("Devi registrarti prima!");
+        return;
+    }
+
+    carrello.push(prodotti[index]);
+    aggiornaCarrello();
+}
+
+// RIMUOVI DAL CARRELLO
+function rimuoviDalCarrello(index) {
+    carrello.splice(index, 1);
+    aggiornaCarrello();
+}
+
+// AGGIORNA CARRELLO
+function aggiornaCarrello() {
+    const lista = document.getElementById("carrello");
+    lista.innerHTML = "";
+
+    carrello.forEach((p, index) => {
+        lista.innerHTML += `
+            <li>
+                ${p.nome} - €${p.prezzo}
+                <button onclick="rimuoviDalCarrello(${index})">❌</button>
+            </li>
+        `;
+    });
+}
+
+// COMPLETA ACQUISTO
+function completaAcquisto() {
+    if (!utenteRegistrato) {
+        alert("Registrati prima!");
+        return;
+    }
+
+    if (carrello.length === 0) {
+        alert("Carrello vuoto!");
+        return;
+    }
+
+    alert("Acquisto completato da " + utenteRegistrato.nome);
+
+    carrello = [];
+    aggiornaCarrello();
+}
+
+// GENERA PDF
+function generaPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    if (!utenteRegistrato) {
+        alert("Registrati prima!");
+        return;
+    }
+
+    doc.text("Riepilogo Ordine", 10, 10);
+    doc.text("Nome: " + utenteRegistrato.nome, 10, 20);
+    doc.text("Email: " + utenteRegistrato.email, 10, 30);
+
+    let y = 40;
+
+    carrello.forEach(p => {
+        doc.text(p.nome + " - €" + p.prezzo, 10, y);
+        y += 10;
+    });
+
+    doc.save("ordine.pdf");
+}
+</script>
+
+</body>
+</html>

@@ -70,15 +70,9 @@ function mostraProdotti() {
     container.innerHTML = "";
 
     prodotti.forEach((p, index) => {
-        container.innerHTML += `
-            <div style="border:1px solid black; margin:10px; padding:10px;">
-                <h3>${p.nome}</h3>
-                <p>Tipo: ${p.tipo}</p>
-                <p>${p.descrizione}</p>
-                <p>Prezzo: €${p.prezzo}</p>
-                <button onclick="aggiungiCarrello(${index})">Aggiungi al carrello</button>
-            </div>
-        `;
+        container.innerHTML += '<div style="border:1px solid black; margin:10px; padding:10px;"><h3>' + p.nome + '</h3><p>Tipo: ' + p.tipo + '</p><p>' + p.descrizione + '</p><p>Prezzo: ' + p.prezzo + '</p><button onclick="aggiungiCarrello(' + index + ')">Aggiungi al carrello</button></div>';
+
+       
     });
 }
 
@@ -133,12 +127,7 @@ function aggiornaCarrello() {
     lista.innerHTML = "";
 
     carrello.forEach((p, index) => {
-        lista.innerHTML += `
-            <li>
-                ${p.nome} - €${p.prezzo}
-                <button onclick="rimuoviDalCarrello(${index})">❌</button>
-            </li>
-        `;
+        lista.innerHTML += "<li>" + p.nome + " - €" + p.prezzo + " <button onclick=\"rimuoviDalCarrello(" + index + ")\">❌</button></li>";
     });
 }
 

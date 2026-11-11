@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anagrafica Classe - AJAX & XML</title>
+  
+  <!-- CSS per la formattazione della tabella e della pagina -->
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #333333;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Stile della tabella */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #dddddd;
+    }
+
+    th {
+      background-color: #343a40;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #e9ecef;
+    }
+
+    #errore {
+      color: #d9534f;
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Anagrafica Classe</h1>
+    <button onclick="caricaDatiXML()">Carica Studenti (XML)</button>
+    
+    <div id="contenuto">
+      <!-- La tabella verrà inserita qui dinamicamente -->
+    </div>
+    <div id="errore"></div>
+  </div>
+
+  <!-- JavaScript per leggere il file XML tramite XMLHttpRequest -->
+  <script>
+    function caricaDatiXML() {
+      // 1. Creazione dell'oggetto XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+
+      // 2. Impostazione della richiesta GET al file XML
+      xhr.open("GET", "classe.xml", true);
+
+      // 3. Gestione del caricamento della risposta
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Risposta ricevuta con successo, estraiamo l'XML
+          const xmlDoc = xhr.responseXML;
+          mostraTabella(xmlDoc);
+        } else {
+          document.getElementById("errore").innerText = "Errore nel caricamento del file XML. Codice stato: " + xhr.status;
+        }
+      };
+
+      // Gestione di eventuali errori di rete
+      xhr.onerror = function() {
+        document.getElementById("errore").innerText = "Errore di connessione o blocco CORS (se stai aprendo il file in locale direttamente via doppio click).";
+      };
+
+      // 4. Invio della richiesta
+      xhr.send();
+    }
+
+    function mostraTabella(xml) {
+      const utenti = xml.getElementsByTagName("utente");
+      
+      let tabella = "<table>";
+      tabella += "<thead><tr><th>#</th><th>Nome</th><th>Cognome</th></tr></thead><tbody>";
+
+      for (let i = 0; i < utenti.length; i++) {
+        // Estrazione dei tag <nome> e <cognome>
+        const nome = utenti[i].getElementsByTagName("nome")[0].childNodes[0].nodeValue;
+        const cognome = utenti[i].getElementsByTagName("cognome")[0].childNodes[0].nodeValue;
+
+        tabella += "<tr>";
+        tabella += "<td>" + (i + 1) + "</td>";
+        tabella += "<td>" + nome + "</td>";
+        tabella += "<td>" + cognome + "</td>";
+        tabella += "</tr>";
+      }
+
+      tabella += "</tbody></table>";
+
+      // Inserimento della tabella creata nell'elemento HTML
+      document.getElementById("contenuto").innerHTML = tabella;
+      document.getElementById("errore").innerText = "";
+    }
+  </script>
+
+</body>
+</html>
